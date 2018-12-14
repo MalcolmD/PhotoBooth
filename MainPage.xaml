@@ -51,12 +51,19 @@
             </Viewbox>
         </Button>
 
-        <ScrollViewer Grid.Row="1" Grid.Column="0">
+        <Button Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+               Name="buttonPlayKiosk" >
+            <Viewbox>
+                <SymbolIcon Symbol="Video" />
+            </Viewbox>
+        </Button>
+
+        <!--<ScrollViewer Grid.Row="1" Grid.Column="0">
             
             <TextBlock TextWrapping="Wrap" FontSize="24"
       Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mi ipsum. Phasellus vel malesuada mauris. Donec pharetra, enim sit amet mattis tincidunt, felis nisi semper lectus, vel porta diam nisi in augue. Pellentesque lacus tortor, aliquam et faucibus id, rhoncus ut justo. Sed id lectus odio, eget pulvinar diam. Suspendisse eleifend ornare libero, in luctus purus aliquet non. Sed interdum, sem vitae rutrum rhoncus, felis ligula ultrices sem, in eleifend eros ante id neque." />
 
-        </ScrollViewer>
+        </ScrollViewer>-->
 
         <ScrollViewer Grid.Row="2" Grid.Column="1"
                       HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
