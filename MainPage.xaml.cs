@@ -26,6 +26,13 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 using Lumia.Imaging;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
+using Windows.Storage.Provider;
+using Windows.Storage.Pickers;
+using Windows.Storage;
+using Windows.Media.Editing;
+using Windows.UI.Composition;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -74,7 +81,7 @@ namespace PhotoBooth
             // init last image index to empty
             this.lastImageIndex = -1;
             // time for each frame in ms
-            this.frameDuration = 50;
+            this.frameDuration = 100;
 
 
             // initialize collection for captured image frames
@@ -170,6 +177,19 @@ namespace PhotoBooth
             if (this.mediaCapture == null || !this.isPreviewActive)
                 return;
 
+            // Start countdown...
+            LeftMiddle.Text = topCenter.Text = rightMiddle.Text = bottomCenter.Text = "3";
+
+            await WaitMethod(1000);
+            LeftMiddle.Text = topCenter.Text = rightMiddle.Text = bottomCenter.Text = "2";
+
+            await WaitMethod(1000);
+            LeftMiddle.Text = topCenter.Text = rightMiddle.Text = bottomCenter.Text = "1";
+
+            await WaitMethod(1000);
+            LeftMiddle.Text = topCenter.Text = rightMiddle.Text = bottomCenter.Text = "";
+
+
             // get media stream properties from the capture device
             VideoEncodingProperties previewProperties = this.mediaCapture.VideoDeviceController.GetMediaStreamProperties(MediaStreamType.VideoPreview) as VideoEncodingProperties;
 
@@ -197,25 +217,26 @@ namespace PhotoBooth
                 // set the current captured bitmap frame
                 this.bitmapFrames[currImageIndex] = previewBitmap;
 
-                // create image source, needed to assign to xaml Image element
-                SoftwareBitmapSource imageSource = new SoftwareBitmapSource();
-                await imageSource.SetBitmapAsync(previewBitmap);
+                string timeString = DateTime.Now.ToString("yyyyMMdd-HHmm_ss");
+                string filename = $"PhotoBooth_{timeString}.jpg";
 
-                // check if current xaml Image has previous image source associated
-                Image currImage = (Image)this.stackPanelImages.Children[currImageIndex];
-                if (currImage.Source != null)
-                {
-                    SoftwareBitmapSource releaseImageSource = (SoftwareBitmapSource)currImage.Source;
-                    releaseImageSource.Dispose();
-                    currImage.Source = null;
-                }
+                StorageFile file_Save = await Windows.Storage.KnownFolders.SavedPictures.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
 
-                // set current Image element bitmap source
-                currImage.Source = imageSource;
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(Windows.Graphics.Imaging.BitmapEncoder.JpegEncoderId, await file_Save.OpenAsync(FileAccessMode.ReadWrite));
 
-                // update the last set image index
-                this.lastImageIndex = currImageIndex;
+                encoder.SetSoftwareBitmap(previewBitmap);
+
+                await encoder.FlushAsync();
+
             }
+
+            // camera shutter sound
+            MediaElement click = new MediaElement();
+            Windows.Storage.StorageFolder folder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Assets");
+            Windows.Storage.StorageFile file = await folder.GetFileAsync("camera-shutter-click.wav");
+            var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+            click.SetSource(stream, file.ContentType);
+            click.Play();
         }
 
         void ButtonSave_Click(object sender, RoutedEventArgs e)
@@ -226,6 +247,26 @@ namespace PhotoBooth
         async void ButtonPlayKiosk_Click(object sender, RoutedEventArgs e)
         {
 
+            // tried to make my own custom photobooth slideshow... :(
+            //CoreApplicationView newView = CoreApplication.CreateNewView();
+            //    int newViewId = 0;
+            //    await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            //    {
+            //        Frame frame = new Frame();
+            //        frame.Navigate(typeof(KioskPage), null);
+            //        Window.Current.Content = frame;
+            //        // You have to activate the window in order to show it later.
+            //        Window.Current.Activate();
+
+            //        newViewId = ApplicationView.GetForCurrentView().Id;
+            //    });
+            //    bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+
+
+
+
+
+            // -- Auto snap feature --
             if (this.mediaCapture == null || !this.isPreviewActive)
                 return;
 
@@ -390,7 +431,7 @@ namespace PhotoBooth
             // set preview animated gif
             this.imageAnimPreview.Source = animBitmap;
 
-            bool saveImage = false;
+            bool saveImage = true;
             if (saveImage)
             {
                 // write animated gif image to file

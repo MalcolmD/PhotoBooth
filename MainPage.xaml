@@ -63,7 +63,21 @@
             <TextBlock TextWrapping="Wrap" FontSize="24"
       Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mi ipsum. Phasellus vel malesuada mauris. Donec pharetra, enim sit amet mattis tincidunt, felis nisi semper lectus, vel porta diam nisi in augue. Pellentesque lacus tortor, aliquam et faucibus id, rhoncus ut justo. Sed id lectus odio, eget pulvinar diam. Suspendisse eleifend ornare libero, in luctus purus aliquet non. Sed interdum, sem vitae rutrum rhoncus, felis ligula ultrices sem, in eleifend eros ante id neque." />
 
+        
         </ScrollViewer>-->
+
+        <Viewbox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TextBlock FontFamily="Segoe UI" Name="LeftMiddle"/>
+        </Viewbox>
+        <Viewbox Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TextBlock FontFamily="Segoe UI" Name="topCenter"/>
+        </Viewbox>
+        <Viewbox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TextBlock FontFamily="Segoe UI" Name="rightMiddle"/>
+        </Viewbox>
+        <Viewbox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TextBlock FontFamily="Segoe UI" Name="bottomCenter"/>
+        </Viewbox>
 
         <ScrollViewer Grid.Row="2" Grid.Column="1"
                       HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
